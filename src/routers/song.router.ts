@@ -1,16 +1,19 @@
-import { Router as router } from 'express';
-import { SongController } from '../controllers/song.controller.js';
+import { Router as createRouter } from 'express';
 import createDebug from 'debug';
-import { SongMemoryRepository } from '../repositories/song.memory.repo.js';
+import { type SongsController } from '../controllers/songs.controller.js';
 
-const debug = createDebug('W6E:router:song');
-debug('Starting song router');
-export const songRouter = router();
-const songRepo = new SongMemoryRepository();
-const songController = new SongController(songRepo);
+const debug = createDebug('W7E:songs:router');
 
-songRouter.get('/', songController.getAll.bind(songController));
-songRouter.get('/:id', songController.getById.bind(songController));
-songRouter.post('/', songController.create.bind(songController));
-songRouter.patch('/:id', songController.update.bind(songController));
-songRouter.delete('/:id', songController.delete.bind(songController));
+export class SongsRouter {
+  router = createRouter();
+
+  constructor(private readonly controller: SongsController) {
+    debug('Instantiated songs router');
+
+    this.router.get('/', controller.getAll.bind(controller));
+    this.router.get('/:id', controller.getById.bind(controller));
+    this.router.post('/', controller.create.bind(controller));
+    this.router.patch('/:id', controller.update.bind(controller));
+    this.router.delete('/:id', controller.delete.bind(controller));
+  }
+}
