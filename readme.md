@@ -1,33 +1,17 @@
-# Week 6 - Challenge 5
+# Week 7 - Challenge 1
 
-## API REST Canciones
+## API REST Songs
 
-Crea una API REST que se conecte a un fichero JSON con una sola propiedad de tipo array, donde almacenarán objetos de canciones.
-La API REST tendrá los siguientes endpoints:
+Continuamos el API REST del Challenge anterior, que se conecte a un fichero JSON, para manipular recursos de tipo song.
 
-[GET] /songs -> devuelve el array de cosas que ya sé
+Recordemos que el JSON tendrá una sola propiedad de tipo array, donde almacenarán objetos que representarán cosas que hemos aprendido en el bootcamp (o cualquier otro modelo).
 
-[GET] /songs/:idSong -> devuelve una cosa que ya sé
+- El modelo de datos estará representado como "entity" en una carpeta/fichero independiente.
+- Dos opciones
+  - El repositorio y el controller son clases que se instancian en el Router.
+  - El repositorio, el controller y el router son clases que se instancian en app.
+- Les errores se controlan mediante un middleware de errores.
+- Añadimos validación con Joi
+- Se testa el 100% del backend.
 
-[DELETE] /songs/:idSong -> borra una cosa que ya sé
-
-[POST] /songs -> crea una cosa que ya sé (la recibe en el body)
-
-[PATCH] /songs/:id -> modifica una cosa que ya sé (la recibe en el body)
-
-Usamos express con las capas:
-
-- app
-- routers
-- controllers
-- model (entities)
-- repositories
-
-AÑADIMOS un front con ANGULAR testado
-
-- Lista de 'songs'
-- Añadir 'song'
-- Borrar 'song'
-- Editar 'song'
-
-- Página de detalle
+Intentamos deploy a Render.
