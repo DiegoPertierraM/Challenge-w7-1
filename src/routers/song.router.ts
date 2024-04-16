@@ -7,13 +7,13 @@ const debug = createDebug('W7E:songs:router');
 export class SongsRouter {
   router = createRouter();
 
-  constructor(private readonly controller: SongsController) {
+  constructor(private readonly songsController: SongsController) {
     debug('Instantiated songs router');
 
-    this.router.get('/', controller.getAll.bind(controller));
-    this.router.get('/:id', controller.getById.bind(controller));
-    this.router.post('/', controller.create.bind(controller));
-    this.router.patch('/:id', controller.update.bind(controller));
-    this.router.delete('/:id', controller.delete.bind(controller));
+    this.router.get('/', songsController.getAll.bind(songsController));
+    this.router.get('/:id', songsController.getById.bind(songsController));
+    this.router.post('/', songsController.create.bind(songsController));
+    this.router.patch('/:id', songsController.update.bind(songsController));
+    this.router.delete('/:id', songsController.delete.bind(songsController));
   }
 }
