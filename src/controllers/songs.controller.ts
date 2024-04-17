@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import { type SongCreateDto, type Song } from '../entities/song';
 import createDebug from 'debug';
-import { type SongsFsRepo } from '../repositories/songs.fs.repo.js';
+import { type SongsSqlRepo } from '../repositories/songs.sql.repo.js';
 import { HttpError } from '../middleware/errors.middleware.js';
 import {
   songCreateDtoSchema,
@@ -11,7 +11,7 @@ import {
 const debug = createDebug('W7E:controller:song');
 
 export class SongsController {
-  constructor(private readonly repo: SongsFsRepo) {
+  constructor(private readonly repo: SongsSqlRepo) {
     debug('Instantiated song controller');
   }
 

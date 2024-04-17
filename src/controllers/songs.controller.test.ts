@@ -1,9 +1,7 @@
 import { type Response, type Request } from 'express';
-import { type SongsFsRepo } from '../repositories/songs.fs.repo';
+import { type SongsSqlRepo } from '../repositories/songs.sql.repo';
 import { SongsController } from './songs.controller';
 import { HttpError } from '../middleware/errors.middleware';
-import { type Song } from '../entities/song';
-import { error } from 'console';
 
 describe('Given an instance of the class songsController', () => {
   const repo = {
@@ -12,7 +10,7 @@ describe('Given an instance of the class songsController', () => {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
-  } as unknown as SongsFsRepo;
+  } as unknown as SongsSqlRepo;
 
   const req = {} as unknown as Request;
   const res = {

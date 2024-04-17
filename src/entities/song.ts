@@ -1,14 +1,27 @@
-export type Song = {
+import { type User } from '@prisma/client';
+
+export type SongSingle = {
   id: string;
   title: string;
   author: string;
-  year: number;
+  genre: string;
+  description: string;
 };
 
-export type SongCreateDto = Omit<Song, 'id'>;
+export type SongSingleCreateDto = Omit<SongSingle, 'id'>;
 
-export type SongUpdateDto = {
-  title?: string;
-  author?: string;
-  year?: number;
+export type Song = {
+  id: string;
+  title: string;
+  author: Partial<User>;
+  genre: string;
+  description: string;
+};
+
+export type SongCreateDto = {
+  id: string;
+  title: string;
+  authorId: string;
+  genre: string;
+  description?: string;
 };

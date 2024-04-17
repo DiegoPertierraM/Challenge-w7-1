@@ -1,18 +1,18 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import { type SingerCreateDto, type Singer } from '../entities/singer';
 import createDebug from 'debug';
+import type Joi from 'joi';
 import { HttpError } from '../middleware/errors.middleware.js';
-import {
-  singerCreateDtoSchema,
-  singerUpdateDtoSchema,
-} from '../entities/singer.schema.js';
-import { type SingersSqlRepo } from '../repositories/singers.sql.repo.js';
+import { type Repo } from '../repositories/type.repo';
 
-const debug = createDebug('W7E:controller:singer');
+const debug = createDebug('W7E:articles:controller');
 
-export class SingersController {
-  constructor(private readonly repo: SingersSqlRepo) {
-    debug('Instantiated singer controller');
+export abstract class BaseController<T, C> {
+  constructor(
+    protected readonly repo: Repo<T, C>,
+    protected readonly validateCreateDtoSchema: Joi.ObjectSchema<C>,
+    protected readonly validateUpdateDtoSchema: Joi.ObjectSchema<C>
+  ) {
+    debug('Instantiated article controller');
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +26,6 @@ export class SingersController {
 
   async getById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-
     try {
       const result = await this.repo.readById(id);
       res.json(result);
@@ -36,14 +35,16 @@ export class SingersController {
   }
 
   async create(req: Request, res: Response, next: NextFunction) {
-    const data = req.body as Singer;
+    const data = req.body as C;
 
     const {
       error,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       value,
-    }: { error: Error | undefined; value: SingerCreateDto } =
-      singerCreateDtoSchema.validate(data, { abortEarly: false });
+    }: { error: Error | undefined; value: C } =
+      this.validateCreateDtoSchema.validate(data, {
+        abortEarly: false,
+      });
 
     if (error) {
       next(new HttpError(406, 'Not Acceptable', error.message));
@@ -61,9 +62,9 @@ export class SingersController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const data = req.body as Singer;
+    const data = req.body as C;
 
-    const { error } = singerUpdateDtoSchema.validate(data, {
+    const { error } = this.validateUpdateDtoSchema.validate(data, {
       abortEarly: false,
     });
 
@@ -82,7 +83,6 @@ export class SingersController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-
     try {
       const result = await this.repo.delete(id);
       res.json(result);
