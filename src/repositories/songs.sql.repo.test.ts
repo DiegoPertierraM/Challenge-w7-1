@@ -1,15 +1,24 @@
 import { readFile, writeFile } from 'fs/promises';
-import { SongsFsRepo } from './songs.fs.repo';
-import { HttpError } from '../middleware/errors.middleware';
-import { type SongCreateDto } from '../entities/song';
+import { SongsSqlRepo } from './songs.sql.repo.js';
+import { HttpError } from '../middleware/errors.middleware.js';
+import { type SongCreateDto } from '../entities/song.js';
+import { type PrismaClient } from '@prisma/client';
 
-jest.mock('fs/promises');
+const mockPrisma = {
+  song: {
+    findMany: jest.fn().mockResolvedValue([]),
+    findUnique: jest.fn().mockResolvedValue({ id: '1' }),
+    create: jest.fn().mockResolvedValue({}),
+    update: jest.fn().mockResolvedValue({}),
+    delete: jest.fn().mockResolvedValue({}),
+  },
+} as unknown as PrismaClient;
 
 describe('Given an instance of the class ArticleFsRepo', () => {
-  const repo = new SongsFsRepo();
+  const repo = new SongsSqlRepo(mockPrisma);
 
   test('Then it should be the instance of the class', () => {
-    expect(repo).toBeInstanceOf(SongsFsRepo);
+    expect(repo).toBeInstanceOf(SongsSqlRepo);
   });
 
   describe('When we use the method readAll', () => {

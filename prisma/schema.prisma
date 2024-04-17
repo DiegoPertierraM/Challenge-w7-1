@@ -13,11 +13,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Singer {
-  id    String     @id @default(cuid())
-  name  String
-  band  String      @default("Solitary")
-  age   Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Song {
+  id        String   @id @default(cuid())
+  title     String
+  author    User   @relation(fields: [authorId], references: [id])
+  authorId  String
+  genre     String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  password  String
+  birthDate DateTime
+  role      Role      @default(user)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  songs  Song[]
+}
+
+enum Role {
+  user
+  admin
+  guest
 }
