@@ -10,7 +10,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=prod node dist/index.js",
     "start:dev": "cross-env DEBUG=W7E* cross-env NODE_ENV=dev cross-env PORT=3400 node --env-file=.env --watch dist/index.js",
-    "start:mon": "cross-env DEBUG=W7E* cross-env NODE_ENV=dev cross-env PORT=3000 nodemon dist/index.js",
+    "start:mon": "cross-env DEBUG=W7E* cross-env NODE_ENV=dev cross-env PORT=3400 nodemon dist/index.js",
     "build": "npm install && tsc -p . --outDir dist",
     "dev": "tsc -w",
     "test": "jest",
