@@ -7,87 +7,15 @@ import {
   songCreateDtoSchema,
   songUpdateDtoSchema,
 } from '../entities/song.schema.js';
+import { BaseController } from './base.controller.js';
+import { type Repo } from '../repositories/type.repo';
 
 const debug = createDebug('W7E:controller:song');
 
-export class SongsController {
-  constructor(private readonly repo: SongsSqlRepo) {
+export class SongsController extends BaseController<Song, SongCreateDto> {
+  constructor(protected readonly repo: Repo<Song, SongCreateDto>) {
+    super(repo, songCreateDtoSchema, songUpdateDtoSchema);
+
     debug('Instantiated song controller');
-  }
-
-  async getAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await this.repo.readAll();
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-
-    try {
-      const result = await this.repo.readById(id);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async create(req: Request, res: Response, next: NextFunction) {
-    const data = req.body as Song;
-
-    const {
-      error,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      value,
-    }: { error: Error | undefined; value: SongCreateDto } =
-      songCreateDtoSchema.validate(data, { abortEarly: false });
-
-    if (error) {
-      next(new HttpError(406, 'Not Acceptable', error.message));
-      return;
-    }
-
-    try {
-      const result = await this.repo.create(value);
-      res.status(201);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async update(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-    const data = req.body as Song;
-
-    const { error } = songUpdateDtoSchema.validate(data, {
-      abortEarly: false,
-    });
-
-    if (error) {
-      next(new HttpError(406, 'Not Acceptable', error.message));
-      return;
-    }
-
-    try {
-      const result = await this.repo.update(id, data);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async delete(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-
-    try {
-      const result = await this.repo.delete(id);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
   }
 }
