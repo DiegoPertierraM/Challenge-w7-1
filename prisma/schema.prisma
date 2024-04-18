@@ -14,26 +14,26 @@ datasource db {
 }
 
 model Song {
-  id        String   @id @default(cuid())
-  title     String
-  author    User   @relation(fields: [authorId], references: [id])
-  authorId  String
-  genre     String
+  id          String   @id @default(cuid())
+  title       String
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+  genre       String
   description String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   name      String
   password  String
   birthDate DateTime
-  role      Role      @default(user)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  songs  Song[]
+  role      Role     @default(user)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  songs     Song[]
 }
 
 enum Role {

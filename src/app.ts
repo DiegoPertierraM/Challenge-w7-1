@@ -10,6 +10,7 @@ import { UsersController } from './controllers/users.controller.js';
 import { UsersRouter } from './routers/users.router.js';
 import { SongsSqlRepo } from './repositories/songs.sql.repo.js';
 import { UsersSqlRepo } from './repositories/users.sql.repo.js';
+import { AuthInterceptor } from './middleware/auth.interceptor.js';
 const debug = createDebug('W7E:app');
 
 export const createApp = () => {
@@ -24,14 +25,16 @@ export const startApp = (app: Express, prisma: PrismaClient) => {
   app.use(cors());
   app.use(express.static('public'));
 
+  const authInterceptor = new AuthInterceptor();
+
   const songSqlRepo = new SongsSqlRepo(prisma);
   const songsController = new SongsController(songSqlRepo);
-  const songsRouter = new SongsRouter(songsController);
+  const songsRouter = new SongsRouter(songsController, authInterceptor);
   app.use('/songs', songsRouter.router);
 
   const usersRepo = new UsersSqlRepo(prisma);
   const usersController = new UsersController(usersRepo);
-  const usersRouter = new UsersRouter(usersController);
+  const usersRouter = new UsersRouter(usersController, authInterceptor);
   app.use('/users', usersRouter.router);
 
   const errorsMiddleware = new ErrorsMiddleware();
