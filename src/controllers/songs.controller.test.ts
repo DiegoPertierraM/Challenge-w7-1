@@ -19,10 +19,10 @@ describe('Given an instance of the class songsController', () => {
   // } as unknown as Response;
   // const next = jest.fn();
 
-  // const controller = new SongsController(repo);
-  // test('Then it should be instance of the class', () => {
-  //   expect(controller).toBeInstanceOf(SongsController);
-  // });
+  const controller = new SongsController(repo);
+  test('Then it should be instance of the class', () => {
+    expect(controller).toBeInstanceOf(SongsController);
+  });
 
   // Describe('When we use the method getAll', () => {
   //   test('Then it should call repo.readAll', async () => {
