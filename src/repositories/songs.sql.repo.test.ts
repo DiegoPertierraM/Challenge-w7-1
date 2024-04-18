@@ -4,6 +4,11 @@ import { HttpError } from '../middleware/errors.middleware.js';
 import { type SongCreateDto } from '../entities/song.js';
 import { type PrismaClient } from '@prisma/client';
 
+jest.mock('fs/promises', () => ({
+  readFile: jest.fn(),
+  writeFile: jest.fn(),
+}));
+
 const mockPrisma = {
   song: {
     findMany: jest.fn().mockResolvedValue([]),
@@ -14,7 +19,7 @@ const mockPrisma = {
   },
 } as unknown as PrismaClient;
 
-describe('Given an instance of the class ArticleFsRepo', () => {
+describe('Given an instance of the class SongsSqlRepo', () => {
   const repo = new SongsSqlRepo(mockPrisma);
 
   test('Then it should be the instance of the class', () => {
@@ -24,9 +29,14 @@ describe('Given an instance of the class ArticleFsRepo', () => {
   describe('When we use the method readAll', () => {
     test('Then it should call readFile', async () => {
       (readFile as jest.Mock).mockResolvedValue('[]');
-      const results = await repo.readAll();
-      expect(readFile).toHaveBeenCalled();
-      expect(results).toEqual([]);
+      const resultsPromise = repo.readAll();
+
+      // Ensure that readFile is awaited before making assertions
+      await resultsPromise;
+
+      // Expectations
+      expect(mockPrisma.song.findMany()).toHaveBeenCalled();
+      await expect(resultsPromise).resolves.toEqual([]);
     });
   });
 
