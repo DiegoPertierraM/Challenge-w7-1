@@ -46,16 +46,13 @@ export class SongsSqlRepo implements Repo<Song, SongCreateDto> {
   }
 
   async create(data: SongCreateDto) {
-    const { authorId, title, ...songData } = data;
-    const newSong = this.prisma.song.create({
+    return this.prisma.song.create({
       data: {
-        ...songData,
-        author: {
-          connect: { id: authorId },
-        },
+        description: data.description ?? '',
+        ...data,
       },
+      select,
     });
-    return newSong;
   }
 
   async update(id: string, data: Partial<SongCreateDto>) {
